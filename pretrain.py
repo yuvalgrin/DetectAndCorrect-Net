@@ -1,8 +1,6 @@
 import dataclasses
-import pickle
 
 import numpy as np
-import wandb
 from sklearn.mixture import GaussianMixture
 from sklearn.preprocessing import StandardScaler
 from scipy.stats import norm
@@ -23,13 +21,10 @@ def plot_noise_hist(loss_sorted_norm, ind_1_sorted, gaus1, gaus2, threshold, pre
     noisy_indices = np.where(sorted_noise_or_not == 0)[0]
     plt.rcParams.update({'font.size': 14})
     plt.figure(figsize=(10, 6))
-    _, bins_clean, _ = plt.hist(loss_sorted_norm[clean_indices], bins=50, density=False, alpha=0.6, color='green', label='Clean')
-    plt.hist(loss_sorted_norm[noisy_indices], bins=50, density=False, alpha=0.6, color='red', label='Noisy')
-    x = np.linspace(np.min(loss_sorted_norm), np.max(loss_sorted_norm), 1000)
-    bin_width = bins_clean[1] - bins_clean[0]
-    plt.plot(x, gaus1.weight * len(loss_sorted_norm) * bin_width * norm.pdf(x, loc=gaus1.mean, scale=gaus1.std), 'r-', lw=2, label=f'Normal Fit 1 [mean={gaus1.mean:.0f},std={gaus1.std:.0f}]')
-    plt.plot(x, gaus2.weight * len(loss_sorted_norm) * bin_width * norm.pdf(x, loc=gaus2.mean, scale=gaus2.std), 'b-', lw=2, label=f'Normal Fit 2 [mean={gaus2.mean:.0f},std={gaus2.std:.0f}]')
-    plt.axvline(threshold, color='k', linestyle='dashed', linewidth=2, label=f'Threshold = {threshold:.2f}')
+
+    bins_clean = _plot_bars(clean_indices, loss_sorted_norm, noisy_indices)
+    _plot_gaussians(bins_clean, gaus1, gaus2, loss_sorted_norm, threshold)
+
     plt.xlabel('Loss Value')
     plt.ylabel('Density')
     plt.title(f'Fitted Distributions and Threshold\nPredicted Noise Rate = {predicted_noise_rate:.3f}')
@@ -37,6 +32,30 @@ def plot_noise_hist(loss_sorted_norm, ind_1_sorted, gaus1, gaus2, threshold, pre
     plt.grid(True)
     hist_path = matrix_dir + '/' + 'noise_hist.png'
     plt.savefig(hist_path)
+
+
+def _plot_gaussians(bins_clean, gaus1, gaus2, loss_sorted_norm, threshold):
+    x = np.linspace(np.min(loss_sorted_norm), np.max(loss_sorted_norm), 1000)
+    width = bins_clean[1] - bins_clean[0]
+    plt.plot(x,
+             gaus1.weight * width * norm.pdf(x, loc=gaus1.mean, scale=gaus1.std),
+             'r-', lw=2, label=f'Normal Fit 1 [mean={gaus1.mean:.0f},std={gaus1.std:.0f}]')
+    plt.plot(x,
+             gaus2.weight * width * norm.pdf(x, loc=gaus2.mean, scale=gaus2.std),
+             'g-', lw=2, label=f'Normal Fit 2 [mean={gaus2.mean:.0f},std={gaus2.std:.0f}]')
+    plt.axvline(threshold, color='k', linestyle='dashed', linewidth=2, label=f'Threshold = {threshold:.2f}')
+
+
+def _plot_bars(clean_indices, loss_sorted_norm, noisy_indices):
+    hist_clean, bins_clean = np.histogram(loss_sorted_norm[clean_indices], bins=50)
+    hist_noisy, bins_noisy = np.histogram(loss_sorted_norm[noisy_indices], bins=50)
+    total_data_points = len(loss_sorted_norm)
+    hist_clean = hist_clean / total_data_points
+    hist_noisy = hist_noisy / total_data_points
+    plt.bar(bins_clean[:-1], hist_clean, width=np.diff(bins_clean), alpha=0.6, color='green', label='Clean',
+            align='edge')
+    plt.bar(bins_noisy[:-1], hist_noisy, width=np.diff(bins_noisy), alpha=0.6, color='red', label='Noisy', align='edge')
+    return bins_clean
 
 
 def fit_gmm(loss_sorted_norm, reg_covar=1e-1):
@@ -53,6 +72,7 @@ def fit_gmm(loss_sorted_norm, reg_covar=1e-1):
     x_range = np.linspace(loss_sorted_norm.min(), loss_sorted_norm.max(), 1000)
     x_range_scaled = scaler.transform(x_range.reshape(-1, 1))
     gmm_predict = gmm.predict(x_range_scaled)
+
     threshold_index = np.argmax(gmm_predict[:-1] != gmm_predict[1:])
     threshold = x_range[threshold_index]
     return gaus1, gaus2, threshold

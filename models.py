@@ -170,9 +170,9 @@ class sig_t(nn.Module):
 
         return T
 
-class FNN(nn.Module):
+class FCNN(nn.Module):
     def __init__(self, num_classes=31, input_dim=20):
-        super(FNN, self).__init__()
+        super(FCNN, self).__init__()
         self.fc1 = nn.Linear(input_dim, 128)
         self.bn1 = nn.BatchNorm1d(128)
         self.fc2 = nn.Linear(128, 64)
