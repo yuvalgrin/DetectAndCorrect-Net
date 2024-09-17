@@ -95,7 +95,7 @@ if args.dataset == 'azimuth':
                                             noise_type=args.noise_type, num_class=args.num_classes)
     test_data = data_load.azimuth_scrna_pbmc_test_dataset(transform=transform_test(args.dataset),
                                                                 target_transform=transform_target)
-    model = FNN(args.num_classes)
+    model = FCNN(args.num_classes)
 
 save_dir, model_dir, matrix_dir, logs = create_dir(args)
 

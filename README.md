@@ -1,8 +1,8 @@
-# NGTC-Net
+# NGTC-NET: Noise Gate Transition Correction for Learning with Label Noise
 
-# NGTC-NET-NOISE-GATED-TRANSITION-CORRECTION-FOR-LABEL-NOISE-LEARNING
+Yuval Grinberg, Nimrod Harel, Jacob Goldberger, Ofir Lindenbaum
 
-Yuval Grinberg, Nimrod Harel, Ofir Lindenbaum, Jacob Goldberger
+![architecture.png](architecture.png)
 
 ## PyTorch implementation
 
@@ -20,7 +20,7 @@ pip3 install torch torchvision
 
 ### Experiments
 
-We verify the effectiveness of NGTC-Net on three synthetic noisy datasets (MNIST, CIFAR-10, CIFAR-100), and one real-world dataset with synthetic noise (Azimuth's scRNA PBMC cell-type annotation).
+We verify the effectiveness of NGTC-NET on three synthetic noisy datasets (MNIST, CIFAR-10, CIFAR-100), and one real-world dataset with synthetic noise (Azimuth's scRNA PBMC cell-type annotation).
 
 
 ### To run the code:
@@ -31,7 +31,7 @@ python3 main.py --dataset &lt;-dataset-&gt;  --noise_type  &lt;-noise type-&gt; 
 
 Here is an example: 
 
-python3 main.py --dataset cifar10  --noise_type  symmetric --noise_rate 0.2 --save_dir tmp
+python3 main.py --dataset cifar10 --noise_type symmetric --noise_rate 0.2 --save_dir tmp
 
 
 The statistics will be saved in the specified directory (tmp in this example). 
