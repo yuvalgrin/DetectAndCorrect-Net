@@ -91,7 +91,4 @@ def estimate_initial_t(data, counters, num_classes, is_noisy_sample):
         if transition_matrix[i].sum() > 0:
             transition_matrix[i] /= transition_matrix[i].sum()
 
-    identity_matrix = np.eye(num_classes, dtype=np.float32)
-    transition_matrix = (transition_matrix + identity_matrix) / 2
-
     return transition_matrix
