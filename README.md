@@ -1,8 +1,8 @@
-# NGTC-NET: Noise Gate Transition Correction for Learning with Label Noise
+# Detect and Correct: A Selective Noise Correction Method for Learning with Noisy Labels
 
 Yuval Grinberg, Nimrod Harel, Jacob Goldberger, Ofir Lindenbaum
 
-![architecture.png](architecture.png)
+![NGTC-Net - Page 1](https://github.com/user-attachments/assets/6a50f773-136a-4935-89be-161bbe7f6a4c)
 
 ## PyTorch implementation
 
