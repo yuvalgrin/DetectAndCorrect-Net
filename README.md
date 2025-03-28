@@ -20,7 +20,7 @@ pip3 install torch torchvision
 
 ### Experiments
 
-We verify the effectiveness of NGTC-NET on three synthetic noisy datasets (MNIST, CIFAR-10, CIFAR-100), and one real-world dataset with synthetic noise (Azimuth's scRNA PBMC cell-type annotation).
+We verify the effectiveness of D&C-NET on three synthetic noisy datasets (MNIST, CIFAR-10, CIFAR-100), and one real-world dataset with synthetic noise (Azimuth's scRNA PBMC cell-type annotation).
 
 
 ### To run the code:
